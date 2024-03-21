@@ -1,0 +1,30 @@
+ROLES
+admin
+main-agronomist
+agronomist
+analyst
+
+onStart -> seed user admin
+
+users
+admin
+PUT /api/users {}
+admin
+GET /api/users []
+admin
+GET /api/users/:id {}
+all
+GET /api/users/me  {}
+
+fields (+ perimeters)
+all
+GET /api/fields -> [{},{}]
+all
+GET /api/fields/:id -> {}
+main-agronomist
+PUT /api/fields
+
+
+
+workOrders
+GET /api/workOrders/
