@@ -22,13 +22,15 @@ export class FieldService {
     const newField = {
       name:createFieldDto.name,
       description:createFieldDto.description,
+      fillColor:createFieldDto.color??"#7bf606",
     }
     return await this.fieldRepository.save(newField);
   }
 
   async findAll() {
     return  await this.fieldRepository.find({
-      relations: ['perimeters', 'tasks', 'tasks.taskMaterials','tasks.taskMaterials.material']
+      relations: ['perimeters']
+      //relations: ['perimeters', 'tasks', 'tasks.taskMaterials','tasks.taskMaterials.material']
     })
   }
 
@@ -51,10 +53,8 @@ export class FieldService {
                     name:updateFieldDto.name ?? updatebleField.name,
                     description:updateFieldDto.description ?? updatebleField.description,
                   });
-    return await this.fieldRepository.findOne({where:{id}});
+    return await this.fieldRepository.findOne({where:{id}, relations: ['perimeters']});
   }
-
-
   async remove(id: number) {
     const field = await this.fieldRepository.findOne({where:{id}});
     if (!field) {

@@ -6,7 +6,6 @@ import {JwtAuthGuard} from "./jwt-auth.guard";
 import {ApiBearerAuth, ApiOperation, ApiResponse, ApiTags} from "@nestjs/swagger";
 import {CreateAuthDto} from "./dto/create-auth.dto";
 
-
 @ApiTags("Auth API endpoint ")
 @ApiBearerAuth()
 @Controller('auth')
@@ -20,6 +19,7 @@ export class AuthController {
       if(!req){console.log("yes"); throw new BadRequestException("is not valid ")}
       return this.authService.login(req.user);
   }
+
   @UseGuards(JwtAuthGuard)
   @Get('me')
   getProfile(@Request() req) {

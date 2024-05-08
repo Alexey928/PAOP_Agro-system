@@ -4,7 +4,7 @@ import {Repository} from 'typeorm';
 import { Task } from './entities/task.entity';
 import { Material } from '../materials/entities/material.entity';
 import {TaskdMaterial} from "./entities/task_material.entity";
-import {machineData, maeterialPrice} from "./dto/create-task.dto";
+import {machineData, materialUsageDataType} from "./dto/create-task.dto";
 import {Machine} from "../machine/entities/machine.entity";
 import {Task_machineEntity} from "./entities/Task_machine.entity";
 
@@ -23,17 +23,17 @@ export class Task_bindingService {
         private TaskMachineRepository:Repository<Task_machineEntity>,
     ) {}
 
-    async enrollTaskWdthMaterials(taskId: number, materialPrices: maeterialPrice[]):Promise<void> {
+    async enrollTaskWdthMaterials(taskId: number, materialUsegeData: materialUsageDataType[]):Promise<void> {
         const Task = await this.TaskRepository.findOne({where:{id:taskId}});
         console.log(Task);
-        const materials =  materialPrices.map(it=>({...new Material(),id:it.id}))
+        const materials =  materialUsegeData.map(it=>({...new Material(),id:it.materialId}))
         Task.materials = materials;
         const task = await this.TaskRepository.save(Task);
-        for (let i=0;i<materialPrices.length;i++){
+        for (let i=0;i<materialUsegeData.length;i++){
            await this.TaskMaterialRepository.save({
                material:task.materials[i],
                task:Task,
-               plannedMaterialAmount:materialPrices[i].planedAmount
+               plannedMaterialAmount:materialUsegeData[i].planedAmount
            });
         }
     }
@@ -41,7 +41,7 @@ export class Task_bindingService {
         const Task = await this.TaskRepository.findOne({where:{id:taskId}});
         Task.machines = machineData.map((it)=>({...new Machine(),id:it.machineId}));
         const task = await this.TaskRepository.save(Task);
-        for(let i =0; i<machineData.length; i++){
+        for(let i =0; i < machineData.length; i++){
             await this.TaskMachineRepository.save({
                 machine:task.machines[i],
                 task:Task,

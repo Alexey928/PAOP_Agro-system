@@ -60,10 +60,11 @@ export class MaterialsService {
           }
           return this.materialsRepository.update(id,{
               name:updateMaterialDto.name ?? updatebleMaterial.name,
-              type:updateMaterialDto.type?? updatebleMaterial.type,
-              description:updateMaterialDto.description?? updatebleMaterial.description,
+              type:updateMaterialDto.type ?? updatebleMaterial.type,
+              cValue:updateMaterialDto.description?? updatebleMaterial.cValue,
               price:updateMaterialDto.MaterialPrice?? updatebleMaterial.price,
               metadata:updateMaterialDto.metadata?? updatebleMaterial.metadata,
+              consumptionRate:updateMaterialDto.consumptionRate??updatebleMaterial.consumptionRate
           })
       }catch (e){
           throw new BadRequestException(`ERROR!! ${e.message}`)

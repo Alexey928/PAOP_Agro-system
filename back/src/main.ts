@@ -2,6 +2,8 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import {DocumentBuilder, SwaggerModule} from "@nestjs/swagger";
 
+
+
 async function bootstrap() {
   const config = new DocumentBuilder()
       .setTitle("Agro menagerie")
@@ -11,10 +13,11 @@ async function bootstrap() {
       .addBearerAuth()
       .addServer("http://localhost:4000/api")
       .build()
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create(AppModule,{cors:true});
   const document = SwaggerModule.createDocument(app,config);
   SwaggerModule.setup("/api/docs",app,document);
   app.setGlobalPrefix("api");
+  app.enableCors();
   await app.listen(process.env.APP_PORT||4000);
   console.log("server was start")
 }

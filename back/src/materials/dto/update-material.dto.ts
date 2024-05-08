@@ -7,4 +7,5 @@ export class UpdateMaterialDto extends PartialType(CreateMaterialDto) {
     description:string;
     MaterialPrice:number;
     metadata:string;
+    consumptionRate:string
 }

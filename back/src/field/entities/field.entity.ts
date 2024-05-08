@@ -22,11 +22,15 @@ export class FieldEntity {
         ()=>Task,(task)=>task.field,{onDelete:"SET NULL"}
     )
     tasks:Task[]
+
     @ApiProperty({example:"some field name",description:"field name"})
     @Column({type:"text",nullable:true})
-
     name:string;
+
     @ApiProperty({example:"some description about field",description:"unik ID"})
     @Column({type:"text",nullable:true})
     description:string
+
+    @Column({type:"text",nullable:true})
+    fillColor:string
 }

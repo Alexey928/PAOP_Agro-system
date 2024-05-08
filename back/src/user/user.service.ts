@@ -31,7 +31,7 @@ async create(createUserDto: CreateUserDto) {
         password: await argon2.hash(createUserDto.password),
         role:createUserDto.password ==="ADMIN"?"ADMIN":createUserDto.role,
     })
-     const token = this.jwtService.sign({email:createUserDto.email,role:user.role});
+     const token = this.jwtService.sign({email:user.email,role:user.role,name:user.name});
     return {user,token}
   };
 

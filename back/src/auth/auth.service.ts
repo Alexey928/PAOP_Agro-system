@@ -22,11 +22,12 @@ export class AuthService{
   }
 
   async login(user: IUser) {
-    const {id,email,role} = user;
+    const {id,email,role,name} = user;
     return {
       id,
       email,
       role,
+      name,
       token:this.jwtService.sign({id:user.id,email:user.email,role:user.role})
     }
   }
