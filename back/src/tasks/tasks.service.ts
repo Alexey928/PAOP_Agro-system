@@ -48,10 +48,8 @@ async create(createTaskDto: CreateTaskDto) {
       const updatebleTask =  await this.TaskRepository.findOne({where:{id}})
       if(!updatebleTask){throw new BadRequestException(`task width id = ${id} is not exist`)}
       await this.taskBindingService.enrollTaskWidthMachine(id,updateTaskDto.machineData);
-
-
       return `This action updates a #${id} task`;
-  }
+   }
 
   async remove(id: number) {
       try {

@@ -3,7 +3,7 @@ import { CreateMaterialDto } from './dto/create-material.dto';
 import { UpdateMaterialDto } from './dto/update-material.dto';
 import {InjectRepository} from "@nestjs/typeorm";
 import {Material} from "./entities/material.entity";
-import {LessThanOrEqual, MoreThan, Repository} from "typeorm";
+import {LessThanOrEqual, Repository} from "typeorm";
 
 @Injectable()
 export class MaterialsService {
@@ -19,9 +19,12 @@ export class MaterialsService {
     const newMaterial = {
       name:createMaterialDto.name,
       type:createMaterialDto.type,
-      price:createMaterialDto.materialPrice,
-      description:createMaterialDto.description,
-      metadata:createMaterialDto.metadata??"some metadata",
+      basePrice:createMaterialDto.basePrice??0,
+      metadata:createMaterialDto.metadata?? "it's not important for this material type",
+      cValue:createMaterialDto.cValue,
+      massOfThousen:createMaterialDto.massOfThousen??0,
+      subTypeName:createMaterialDto.subTypeName??"it's not important for this material type",
+      packaging:createMaterialDto.packaging??"null"
     }
 
     return await this.materialsRepository.save(newMaterial);
@@ -32,7 +35,7 @@ export class MaterialsService {
           return await this.materialsRepository.findBy(
               {
                   type:queryParams.type,
-                  price:LessThanOrEqual(queryParams.minPrice),
+                  basePrice:LessThanOrEqual(queryParams.minPrice),
               }
           );
       }
@@ -40,7 +43,7 @@ export class MaterialsService {
           return await this.materialsRepository.findBy({type:queryParams.type})
       }
       if(queryParams.minPrice){
-          return await this.materialsRepository.findBy({price:LessThanOrEqual(queryParams.minPrice)})
+          return await this.materialsRepository.findBy({basePrice:LessThanOrEqual(queryParams.minPrice)})
       }
       return this.materialsRepository.find();
   }
@@ -62,9 +65,10 @@ export class MaterialsService {
               name:updateMaterialDto.name ?? updatebleMaterial.name,
               type:updateMaterialDto.type ?? updatebleMaterial.type,
               cValue:updateMaterialDto.description?? updatebleMaterial.cValue,
-              price:updateMaterialDto.MaterialPrice?? updatebleMaterial.price,
+              basePrice:updateMaterialDto.MaterialPrice?? updatebleMaterial.basePrice,
               metadata:updateMaterialDto.metadata?? updatebleMaterial.metadata,
               consumptionRate:updateMaterialDto.consumptionRate??updatebleMaterial.consumptionRate
+
           })
       }catch (e){
           throw new BadRequestException(`ERROR!! ${e.message}`)

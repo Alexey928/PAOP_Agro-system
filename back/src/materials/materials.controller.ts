@@ -1,4 +1,4 @@
-import {Controller, Get, Post, Body, Patch, Param, Delete, Query} from '@nestjs/common';
+import {Controller, Get, Post, Body, Patch, Param, Delete, Query, UsePipes, ValidationPipe} from '@nestjs/common';
 import { MaterialsService } from './materials.service';
 import { CreateMaterialDto } from './dto/create-material.dto';
 import { UpdateMaterialDto } from './dto/update-material.dto';
@@ -7,12 +7,11 @@ import {ApiTags} from "@nestjs/swagger";
 @Controller('materials')
 export class MaterialsController {
   constructor(private readonly materialsService: MaterialsService) {}
-
+  @UsePipes(new ValidationPipe())
   @Post()
   create(@Body() createMaterialDto: CreateMaterialDto) {
     return this.materialsService.create(createMaterialDto);
   }
-
   @Get()
   findAll(@Query() queryParams:{type?:string,minPrice?:number}) {
     return this.materialsService.findAll(queryParams);

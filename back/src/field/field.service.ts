@@ -52,7 +52,8 @@ export class FieldService {
         {
                     name:updateFieldDto.name ?? updatebleField.name,
                     description:updateFieldDto.description ?? updatebleField.description,
-                  });
+
+        });
     return await this.fieldRepository.findOne({where:{id}, relations: ['perimeters']});
   }
   async remove(id: number) {
