@@ -17,6 +17,5 @@ export class IfieldPerimeterEntity {
     @ManyToOne(()=>FieldEntity,(field)=>field.perimeters,{onDelete:"CASCADE"})
     @JoinColumn({name:'field_id'})
     field:FieldEntity
-
 }
 

@@ -22,7 +22,7 @@ async create(createTaskDto: CreateTaskDto) {
       type:createTaskDto.type,
       from:createTaskDto.from,
       coment:createTaskDto.coment?? "comment about task,from ordinary agronomist",
-      status:createTaskDto.status,
+      status:createTaskDto.status??"in_progres",
     }
     const Task = await this.TaskRepository.save(newTask);
     if(createTaskDto.materialIdes){

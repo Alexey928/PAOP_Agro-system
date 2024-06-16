@@ -18,7 +18,7 @@ export class TaskdMaterial {
     Package:string// !! IN TASC CREATING MUST BE !
     @Column({nullable:false})
     currentConsumptionRate:number //
-    @ManyToOne(() => Task, task => task.taskMaterials)
+    @ManyToOne(() => Task, task => task.taskMaterials,{onDelete:"CASCADE"})
     @JoinColumn({name:"task_id"})
     task: Task;
     @ManyToOne(() => Material, material => material.taskMaterials)

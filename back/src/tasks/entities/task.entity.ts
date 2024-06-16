@@ -36,7 +36,7 @@ export class Task {
     @ManyToMany(()=>Machine)
     @JoinTable()
     machines:Machine[]
-    @OneToMany(() => TaskdMaterial, taskMaterial => taskMaterial.task)
+    @OneToMany(() => TaskdMaterial, taskMaterial => taskMaterial.task,{onDelete:"CASCADE"})
     taskMaterials: TaskdMaterial[];
     @OneToMany(()=>Task_machineEntity,(task_machine)=>task_machine.task)
     taskMachines: Task_machineEntity[]
