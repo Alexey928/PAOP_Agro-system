@@ -9,10 +9,14 @@ export class Material {
     name:string;
 
     @Column({type:"text",nullable:false})
-    subTypeName:string;
+    type:string//
+
+    @Column({type:"text",nullable:false})
+    subType:string;
 
     @Column({type:"text",nullable:false})
     cValue:string;
+
 
     @Column({type:"text",nullable:false})
     consumptionRate:string
@@ -23,11 +27,8 @@ export class Material {
     @Column({type:"float",nullable:true})
     massOfThousen:number;
 
-    @Column({type:"text",nullable:false})
-    type:string//
-
     @Column({type:"text",nullable:true})
-    metadata:string;// для посевмата например єто поле можно заполнить цветом, по которому раскрасятся поля. для химии тут можно хранить ссылку на сайт производителя и тд.
+    metaData:string;// для посевмата например єто поле можно заполнить цветом, по которому раскрасятся поля. для химии тут можно хранить ссылку на сайт производителя и тд.
 
     @Column({type:"text",nullable:false})
     packaging:string

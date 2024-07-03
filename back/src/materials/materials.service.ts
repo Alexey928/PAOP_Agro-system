@@ -16,19 +16,24 @@ export class MaterialsService {
         });
     if(!exsExist) return new BadRequestException("material width this name is exist")
 
-    const newMaterial = {
+
+
+
+       const newMaterial = {
       name:createMaterialDto.name,
       type:createMaterialDto.type,
       basePrice:createMaterialDto.basePrice??0,
-      metadata:createMaterialDto.metadata?? "it's not important for this material type",
+      metaData:createMaterialDto.metaData?? "it's not important for this material type",
       cValue:createMaterialDto.cValue,
       massOfThousen:createMaterialDto.massOfThousen??0,
-      subTypeName:createMaterialDto.subTypeName??"it's not important for this material type",
-      packaging:createMaterialDto.packaging??"null"
+      subType:createMaterialDto.subType??"it's not important for this material type",
+      packaging:createMaterialDto.packaging??"null",
+      consumptionRate:createMaterialDto.consumptionRate
     }
 
     return await this.materialsRepository.save(newMaterial);
   }
+
   async findAll(queryParams:{type?:string,minPrice?:number}) {
       if(!queryParams) return this.materialsRepository.find();
       if(queryParams.type && queryParams.minPrice){
@@ -66,7 +71,7 @@ export class MaterialsService {
               type:updateMaterialDto.type ?? updatebleMaterial.type,
               cValue:updateMaterialDto.description?? updatebleMaterial.cValue,
               basePrice:updateMaterialDto.MaterialPrice?? updatebleMaterial.basePrice,
-              metadata:updateMaterialDto.metadata?? updatebleMaterial.metadata,
+              metaData:updateMaterialDto.metaData?? updatebleMaterial.metaData,
               consumptionRate:updateMaterialDto.consumptionRate??updatebleMaterial.consumptionRate
 
           })

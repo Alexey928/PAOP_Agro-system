@@ -13,8 +13,6 @@ import { MaterialsModule } from './materials/materials.module';
 import { MachineModule } from './machine/machine.module';
 import { DriversModule } from './drivers/drivers.module';
 
-
-
 @Module({
   imports: [
     UserModule,
