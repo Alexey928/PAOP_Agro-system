@@ -25,7 +25,7 @@ export class Task_bindingService {
 
     async enrollTaskWdthMaterials(taskId: number, materialUsegeData: materialUsageDataType[]):Promise<void> {
         const Task = await this.TaskRepository.findOne({where:{id:taskId}});
-        console.log(Task);
+        console.log(materialUsegeData);
         const materials =  materialUsegeData.map(it=>({...new Material(),id:it.materialId}))
         Task.materials = materials;
         const task = await this.TaskRepository.save(Task);
@@ -33,7 +33,9 @@ export class Task_bindingService {
            await this.TaskMaterialRepository.save({
                material:task.materials[i],
                task:Task,
-               plannedMaterialAmount:materialUsegeData[i].planedAmount
+               plannedMaterialAmount:materialUsegeData[i].planedAmount,
+               currentPrice:5,
+               currentConsumptionRate:materialUsegeData[i].currentConsumptionRate
            });
         }
     }

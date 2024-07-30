@@ -13,4 +13,5 @@ import {Task_machineEntity} from "./entities/Task_machine.entity";
     providers: [Task_bindingService],
     exports:[Task_bindingService]
 })
+
 export class TaskBindingModule {}

@@ -14,10 +14,12 @@ export class TaskdMaterial {
     actualMaterialAmount:number;
     @Column({nullable:true})
     currentPrice:number;
-    @Column({nullable:false})
-    Package:string// !! IN TASC CREATING MUST BE !
+    @Column({nullable:true})
+    Package:string
     @Column({nullable:false})
     currentConsumptionRate:number //
+
+
     @ManyToOne(() => Task, task => task.taskMaterials,{onDelete:"CASCADE"})
     @JoinColumn({name:"task_id"})
     task: Task;

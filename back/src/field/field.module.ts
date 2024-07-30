@@ -11,7 +11,8 @@ import {jwtConstants} from "../auth/constans";
   providers: [FieldService],
   imports:[TypeOrmModule.forFeature([FieldEntity]),JwtModule.register({
     secret: jwtConstants.secret,
-  })]
+  })],
+  exports:[FieldService]
 })
 
 export class FieldModule {}

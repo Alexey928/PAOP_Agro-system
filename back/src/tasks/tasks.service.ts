@@ -21,14 +21,16 @@ async create(createTaskDto: CreateTaskDto) {
       field:{id:+createTaskDto.fieldId},
       type:createTaskDto.type,
       from:createTaskDto.from,
-      coment:createTaskDto.coment?? "comment about task,from ordinary agronomist",
-      status:createTaskDto.status??"in_progres",
+      comment:createTaskDto.coment ?? "comment about task,from ordinary agronomist",
+      status:createTaskDto.status ?? "in_progres",
     }
     const Task = await this.TaskRepository.save(newTask);
     if(createTaskDto.materialIdes){
         await  this.taskBindingService.enrollTaskWdthMaterials(Task.id,createTaskDto.materialIdes);
     }
-    return Task
+    const task = await this.TaskRepository.findOne({where:{id:Task.id},
+        relations:["field","taskMaterials","taskMaterials.material"]});
+   return task
   }
   async findAll(from:Date, to:Date, fieldId?:number) {
       console.log(from,to)

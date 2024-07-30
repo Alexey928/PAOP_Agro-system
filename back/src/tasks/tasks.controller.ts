@@ -36,8 +36,8 @@ export class TasksController {
   @Patch("bind-material")
   @UsePipes(new ValidationPipe())
   bindMaterialWidthAmountToTask(@Body() bindingMaterials:bindMaterialToTaskDTO){
-    if(!bindingMaterials.materialsPrices) throw new BadRequestException()
-    this.task_bindingService.enrollTaskWdthMaterials(bindingMaterials.taskId,bindingMaterials.materialsPrices)
+    if(!bindingMaterials.materialsTascsAmount) throw new BadRequestException()
+    this.task_bindingService.enrollTaskWdthMaterials(bindingMaterials.taskId,bindingMaterials.materialsTascsAmount)
     return "join";
   }
   @Patch("bind-machines")

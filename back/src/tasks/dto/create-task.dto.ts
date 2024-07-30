@@ -3,10 +3,12 @@ import {IsNotEmpty} from "class-validator";
 export type materialUsageDataType = {
     materialId:number
     planedAmount:number
-    Package:number
+   // Package:number
     currentConsumptionRate:number
-    
+    unnesesuryWater:number
 }
+
+
 export type machineData = {
     machineId:number
     planedFuelAmount:number
@@ -31,7 +33,7 @@ export class bindMaterialToTaskDTO{
     @IsNotEmpty()
     taskId:number
     @IsNotEmpty()
-    materialsPrices:materialUsageDataType[]
+    materialsTascsAmount:materialUsageDataType[]
 }
 export class bindMachinesTotaskDTO{
     @IsNotEmpty()
