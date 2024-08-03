@@ -29,13 +29,14 @@ export class FieldService {
 
   async findAll() {
     return  await this.fieldRepository.find({
-      relations: ['perimeters']
+      relations: ['perimeters','cultureContainHistory']
       //relations: ['perimeters', 'tasks', 'tasks.taskMaterials','tasks.taskMaterials.material']
     })
   }
 
   async findOne(id: number) {
-    const field = await this.fieldRepository.findOne({ where: {id} ,relations:{perimeters:true,tasks:true}});
+    const field = await this.fieldRepository.findOne({ where: {id} ,
+      relations:{perimeters:true,tasks:true,cultureContainHistory:true}});
     if(!field) throw new BadRequestException(`Field with id ${id} not found`);
     return field
   }
@@ -54,7 +55,7 @@ export class FieldService {
                     description:updateFieldDto.description ?? updatebleField.description,
 
         });
-    return await this.fieldRepository.findOne({where:{id}, relations: ['perimeters']});
+    return await this.fieldRepository.findOne({where:{id}, relations: ['perimeters','cultureContainHistory']});
   }
   async remove(id: number) {
     const field = await this.fieldRepository.findOne({where:{id}});

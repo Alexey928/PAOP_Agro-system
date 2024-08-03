@@ -6,6 +6,24 @@ import {InjectRepository} from "@nestjs/typeorm";
 import {Task} from "./entities/task.entity";
 import {Between, Repository} from "typeorm";
 import {TaskdMaterial} from "./entities/task_material.entity";
+import {CultureContaynedHistoryModule} from "../culture-contayned-history/culture-contayned-history.module";
+import {CultureContaynedHistoryService} from "../culture-contayned-history/culture-contayned-history.service";
+
+// equal of front enum
+export enum TypesOfTask  {
+    "SHOWING_CROPS",
+    "SHOWING_CROPS_WIDTH_FERTILYZE",
+    "SPRAYING",
+    "SOIL_WORKS",
+    "FERTILIZATION",
+    "HARVEST",
+    "WINDROWING_OF_PERENNIALS",
+    "MOWING_PERENNIALS",
+    "BALINING_OF_PERENNIALS",
+    "TRANPORTING",
+    "SEED TREATMENT",
+}
+
 
 @Injectable()
 export class TasksService {
@@ -14,13 +32,17 @@ export class TasksService {
       private readonly TaskRepository:Repository<Task>,
       @InjectRepository(TaskdMaterial)
       private readonly taskMaterialRepo:Repository<TaskdMaterial>,
-      private readonly taskBindingService:Task_bindingService
+      private readonly taskBindingService:Task_bindingService,
+      private readonly  cultureHistoryService:CultureContaynedHistoryService,
+
   ) {}
+
 async create(createTaskDto: CreateTaskDto) {
     const newTask = {
       field:{id:+createTaskDto.fieldId},
       type:createTaskDto.type,
       from:createTaskDto.from,
+      square:createTaskDto.square,
       comment:createTaskDto.coment ?? "comment about task,from ordinary agronomist",
       status:createTaskDto.status ?? "in_progres",
     }
@@ -28,8 +50,14 @@ async create(createTaskDto: CreateTaskDto) {
     if(createTaskDto.materialIdes){
         await  this.taskBindingService.enrollTaskWdthMaterials(Task.id,createTaskDto.materialIdes);
     }
+
     const task = await this.TaskRepository.findOne({where:{id:Task.id},
-        relations:["field","taskMaterials","taskMaterials.material"]});
+        relations:["field","taskMaterials","taskMaterials.material"]
+    });
+    if(Task.type === "0" || Task.type==="1"){
+       // this.cultureHistoryService.create({)})
+    }
+
    return task
   }
   async findAll(from:Date, to:Date, fieldId?:number) {

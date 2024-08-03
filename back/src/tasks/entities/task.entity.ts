@@ -19,6 +19,8 @@ export class Task {
     id:number
     @Column({nullable:false})
     type:string
+    @Column({nullable:true})
+    square:number
     @Column({nullable:false})
     from:Date
     @Column({nullable:true})

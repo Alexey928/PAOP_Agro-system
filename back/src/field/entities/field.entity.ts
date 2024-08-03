@@ -3,6 +3,7 @@ import {Column, Entity, OneToMany, PrimaryGeneratedColumn} from "typeorm";
 import {IfieldPerimeterEntity} from "../../ifield-perimetr/entities/ifield-perimetr.entity";
 import {Task} from "../../tasks/entities/task.entity";
 import {ApiProperty} from "@nestjs/swagger";
+import {CultureContaynedHistoryEntity} from "../../culture-contayned-history/entities/culture-contayned-history.entity";
 
 @Entity({name:"Field"})// name of database table
 export class FieldEntity {
@@ -17,7 +18,14 @@ export class FieldEntity {
         )
     perimeters:IfieldPerimeterEntity[];
 
+    @OneToMany(()=>CultureContaynedHistoryEntity,
+        (cultureContaynedHistory)=>cultureContaynedHistory.field,
+        {onDelete:"CASCADE"}
+    )
+    cultureContainHistory:CultureContaynedHistoryEntity[]
+
     @ApiProperty({example:[{...new Task(),id:"1"}],description:"relation Task"})
+
     @OneToMany(
         ()=>Task,(task)=>task.field,{onDelete:"SET NULL"}
     )

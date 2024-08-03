@@ -12,6 +12,7 @@ import { TasksModule } from './tasks/tasks.module';
 import { MaterialsModule } from './materials/materials.module';
 import { MachineModule } from './machine/machine.module';
 import { DriversModule } from './drivers/drivers.module';
+import { CultureContaynedHistoryModule } from './culture-contayned-history/culture-contayned-history.module';
 
 @Module({
   imports: [
@@ -38,6 +39,7 @@ import { DriversModule } from './drivers/drivers.module';
     MaterialsModule,
     MachineModule,
     DriversModule,
+    CultureContaynedHistoryModule,
   ],
   controllers: [AppController],
   providers: [AppService],

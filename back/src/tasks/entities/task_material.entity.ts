@@ -2,8 +2,6 @@ import {Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn} from "typ
 import {Task} from "./task.entity";
 import {Material} from "../../materials/entities/material.entity";
 
-
-
 @Entity({name:"task_material"})
 export class TaskdMaterial {
     @PrimaryGeneratedColumn()
@@ -18,8 +16,6 @@ export class TaskdMaterial {
     Package:string
     @Column({nullable:false})
     currentConsumptionRate:number //
-
-
     @ManyToOne(() => Task, task => task.taskMaterials,{onDelete:"CASCADE"})
     @JoinColumn({name:"task_id"})
     task: Task;

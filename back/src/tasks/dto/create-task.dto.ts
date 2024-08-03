@@ -25,6 +25,8 @@ export class CreateTaskDto {
     coment:string;
     @IsNotEmpty()
     fieldId:string
+    @IsNotEmpty()
+    square:number
     materialIdes:materialUsageDataType[]
     machines:machineData[]
 }
