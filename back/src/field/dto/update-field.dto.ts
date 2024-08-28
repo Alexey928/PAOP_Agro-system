@@ -5,4 +5,6 @@ export class UpdateFieldDto extends PartialType(CreateFieldDto) {
     name:string;
     description:string;
     color:string
+    sqere:number
+
 }

@@ -1,13 +1,13 @@
 import {BadRequestException, Injectable} from '@nestjs/common';
 import { CreateTaskDto } from './dto/create-task.dto';
-import { UpdateTaskDto } from './dto/update-task.dto';
+import {CloseTaskDto, UpdateTaskDto} from './dto/update-task.dto';
 import {Task_bindingService} from "./task_binding.service";
 import {InjectRepository} from "@nestjs/typeorm";
 import {Task} from "./entities/task.entity";
 import {Between, Repository} from "typeorm";
 import {TaskdMaterial} from "./entities/task_material.entity";
-import {CultureContaynedHistoryModule} from "../culture-contayned-history/culture-contayned-history.module";
 import {CultureContaynedHistoryService} from "../culture-contayned-history/culture-contayned-history.service";
+import {FieldEntity} from "../field/entities/field.entity";
 
 // equal of front enum
 export enum TypesOfTask  {
@@ -30,14 +30,15 @@ export class TasksService {
   constructor(
       @InjectRepository(Task)
       private readonly TaskRepository:Repository<Task>,
+      @InjectRepository(FieldEntity)
+      private readonly  FieldRepository:Repository<FieldEntity>,
       @InjectRepository(TaskdMaterial)
       private readonly taskMaterialRepo:Repository<TaskdMaterial>,
       private readonly taskBindingService:Task_bindingService,
       private readonly  cultureHistoryService:CultureContaynedHistoryService,
-
   ) {}
 
-async create(createTaskDto: CreateTaskDto) {
+ async create(createTaskDto: CreateTaskDto) {
     const newTask = {
       field:{id:+createTaskDto.fieldId},
       type:createTaskDto.type,
@@ -47,19 +48,21 @@ async create(createTaskDto: CreateTaskDto) {
       status:createTaskDto.status ?? "in_progres",
     }
     const Task = await this.TaskRepository.save(newTask);
-    if(createTaskDto.materialIdes){
+    const currentField = await this.FieldRepository.findOne({where:{id:+createTaskDto.fieldId}})
+    if ((currentField.currentFreeSqere-createTaskDto.square<0)&&
+        (createTaskDto.type === "0" || createTaskDto.type==="1")) {
+        console.log("field overload");
+        throw new BadRequestException(`overload of Field`)
+    }
+    if(createTaskDto.materialIdes.length){
         await  this.taskBindingService.enrollTaskWdthMaterials(Task.id,createTaskDto.materialIdes);
     }
-
     const task = await this.TaskRepository.findOne({where:{id:Task.id},
         relations:["field","taskMaterials","taskMaterials.material"]
     });
-    if(Task.type === "0" || Task.type==="1"){
-       // this.cultureHistoryService.create({)})
-    }
-
-   return task
+    return task
   }
+
   async findAll(from:Date, to:Date, fieldId?:number) {
       console.log(from,to)
       const tasks = await this.TaskRepository.find({where:{
@@ -72,16 +75,38 @@ async create(createTaskDto: CreateTaskDto) {
   async findOne(id: number) {
     return await this.TaskRepository.findOne({where:{id},relations:["taskMaterials","taskMaterials.material"]});
   }
+async  updateStatus(id:number,updateTaskDto:CloseTaskDto){
+    const updatebleTask =  await this.TaskRepository.findOne({where:{id}});
+    const currentField = await this.FieldRepository.findOne({where:{id:+updateTaskDto.fieldId}});
+    if((currentField.currentFreeSqere-updateTaskDto.square<0)&&(updatebleTask.type === "0" || updatebleTask.type==="1")){
+        const cultures:string[] = updatebleTask.taskMaterials.map((el)=>{
+                return el.material.type==="насіння"? el.material.name:""
+            })
+            await this.cultureHistoryService.create({
+                fieldId:updatebleTask.field.id,
+                sqere:updatebleTask.square,
+                culture:cultures.join("/"),
+                from: new Date(),
+                cultureYearCount:"0"
+            });
+        await this.FieldRepository.update(updateTaskDto.fieldId,{
+            currentFreeSqere:currentField.currentFreeSqere-updatebleTask.square,
+            })
+        return await this.TaskRepository.update(updatebleTask.id,{
+            status:"done",
+            to:new Date()
+        })
+    }
+    throw new BadRequestException(`is overload the field `)
 
-
-   async update(id: number, updateTaskDto: UpdateTaskDto) {
+  }
+async update(id: number, updateTaskDto: UpdateTaskDto) {
       const updatebleTask =  await this.TaskRepository.findOne({where:{id}})
       if(!updatebleTask){throw new BadRequestException(`task width id = ${id} is not exist`)}
       await this.taskBindingService.enrollTaskWidthMachine(id,updateTaskDto.machineData);
       return `This action updates a #${id} task`;
    }
-
-  async remove(id: number) {
+async remove(id: number) {
       try {
           const task = await this.TaskRepository.findOne({where: {id}, relations: {taskMaterials: true}});
           if(task.status==="isDone") return new BadRequestException("its task in statistics , we can not remove")

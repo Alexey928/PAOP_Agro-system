@@ -17,7 +17,7 @@ import {
   bindMaterialToTaskDTO,
   CreateTaskDto,
 } from './dto/create-task.dto';
-import { UpdateTaskDto } from './dto/update-task.dto';
+import {CloseTaskDto, UpdateTaskDto} from './dto/update-task.dto';
 import {ApiTags} from "@nestjs/swagger";
 import {Task_bindingService} from "./task_binding.service";
 
@@ -56,6 +56,11 @@ export class TasksController {
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.tasksService.findOne(+id);
+  }
+
+  @Patch('set-task-done:id')
+  setTaskDone(@Param('id') id:string,@Body() updateTaskDto: CloseTaskDto){
+    return this.tasksService.updateStatus(+id,updateTaskDto)
   }
 
   @Patch(':id')

@@ -1,9 +1,6 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import {DocumentBuilder, SwaggerModule} from "@nestjs/swagger";
-
-
-
 async function bootstrap() {
   const config = new DocumentBuilder()
       .setTitle("Agro menagerie")
@@ -22,3 +19,14 @@ async function bootstrap() {
   console.log("server was start")
 }
 bootstrap();
+
+// let temp = 2000
+// function tymeaut () {
+//   setTimeout(()=>{
+//     console.log(`is recursy ${temp}`)
+//     temp+=1000;
+//     tymeaut()
+//   },temp);
+// }
+
+//tymeaut()

@@ -4,12 +4,14 @@ import { UpdateFieldDto } from './dto/update-field.dto';
 import {InjectRepository} from "@nestjs/typeorm";
 import {Repository} from "typeorm";
 import {FieldEntity} from "./entities/field.entity";
+import {CultureContaynedHistoryService} from "../culture-contayned-history/culture-contayned-history.service";
 
 @Injectable()
 export class FieldService {
   constructor(
       @InjectRepository(FieldEntity)
-      private readonly fieldRepository:Repository<FieldEntity>
+      private readonly fieldRepository:Repository<FieldEntity>,
+      private readonly  cultureHistoryService:CultureContaynedHistoryService
   ) {};
   async create(createFieldDto: CreateFieldDto) {
     const exsExist = await this.fieldRepository.findBy({
@@ -23,9 +25,18 @@ export class FieldService {
       name:createFieldDto.name,
       description:createFieldDto.description,
       fillColor:createFieldDto.color??"#7bf606",
+      currentFreeSqere:createFieldDto.currentFreeSqeare??100,
+      startFreeSqere:createFieldDto.currentFreeSqeare??100
     }
-    return await this.fieldRepository.save(newField);
+
+    const field =  await this.fieldRepository.save(newField);
+    await this.cultureHistoryService.create( {fieldId:field.id,culture:"none",
+      sqere:createFieldDto.currentFreeSqeare,from:new Date(),cultureYearCount:""});
+
+
+    return this.fieldRepository.findOne({where:{id:field.id},relations:['perimeters','cultureContainHistory']})
   }
+
 
   async findAll() {
     return  await this.fieldRepository.find({
@@ -49,14 +60,21 @@ export class FieldService {
     if(nameMatchingField && nameMatchingField.id!==id) {
       throw new BadRequestException(`Field width this name is already exist in base`);
     }
-    await this.fieldRepository.update(id,
-        {
-                    name:updateFieldDto.name ?? updatebleField.name,
-                    description:updateFieldDto.description ?? updatebleField.description,
-
-        });
-    return await this.fieldRepository.findOne({where:{id}, relations: ['perimeters','cultureContainHistory']});
+    if(updatebleField.currentFreeSqere===updatebleField.startFreeSqere){
+      await this.fieldRepository.update(id,
+          {
+            name:updateFieldDto.name ?? updatebleField.name,
+            description:updateFieldDto.description ?? updatebleField.description,
+            currentFreeSqere:updateFieldDto.sqere??updatebleField.perimeters[updatebleField.perimeters.length-1].sqere,
+            startFreeSqere:updateFieldDto.sqere??updatebleField.perimeters[updatebleField.perimeters.length-1].sqere,
+          });
+    }else{
+      throw new BadRequestException(`only for clear field`);
+    }
+    return await this.fieldRepository.findOne({ where:{id},relations: ['perimeters','cultureContainHistory']});
   }
+
+
   async remove(id: number) {
     const field = await this.fieldRepository.findOne({where:{id}});
     if (!field) {

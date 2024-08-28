@@ -41,4 +41,10 @@ export class FieldEntity {
 
     @Column({type:"text",nullable:true})
     fillColor:string
+
+    @Column({type:"float",nullable:true})
+    currentFreeSqere:number
+
+    @Column({type:"float",nullable:true})
+    startFreeSqere:number
 }

@@ -10,8 +10,13 @@ export class UpdateTaskDto extends PartialType(CreateTaskDto) {
     machineData:machineData[];
     @IsNotEmpty()
     status:string
+    @IsNotEmpty()
+    square:number
 }
+
 export class CloseTaskDto extends PartialType(CreateTaskDto){
     @IsNotEmpty()
     status:string
+    @IsNotEmpty()
+    fieldId:string
 }

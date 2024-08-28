@@ -9,4 +9,7 @@ export class CreateCultureContaynedHistoryDto {
     from:Date
     @IsNotEmpty()
     cultureYearCount:string
+    @IsNotEmpty()
+    fieldId:number
+
 }
