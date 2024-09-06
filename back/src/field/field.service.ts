@@ -44,7 +44,6 @@ export class FieldService {
       //relations: ['perimeters', 'tasks', 'tasks.taskMaterials','tasks.taskMaterials.material']
     })
   }
-
   async findOne(id: number) {
     const field = await this.fieldRepository.findOne({ where: {id} ,
       relations:{perimeters:true,tasks:true,cultureContainHistory:true}});
