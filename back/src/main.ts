@@ -18,6 +18,7 @@ async function bootstrap() {
   await app.listen(process.env.APP_PORT||4000);
   console.log("server was start")
 }
+
 bootstrap();
 
 // let temp = 2000
