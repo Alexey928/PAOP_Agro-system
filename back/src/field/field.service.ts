@@ -51,8 +51,9 @@ export class FieldService {
     return field
   }
   async update(id: number, updateFieldDto: UpdateFieldDto) {
-    const updatebleField = await this.fieldRepository.findOne({where:{id}});
+    const updatebleField = await this.fieldRepository.findOne({where:{id},relations:['perimeters']});
     const nameMatchingField = await this.fieldRepository.findOne({where:{name:updateFieldDto.name}})
+    console.log(updatebleField.perimeters,"servise");
     if (!updatebleField) {
       throw new BadRequestException(`Field with id ${id} not found`);
     }
